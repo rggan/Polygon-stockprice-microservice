@@ -43,9 +43,9 @@ const StockList = () => {
 ## Receive Data
 ### Example of how we can handle our data
 ```
-const stockData = data.tickers[0];
-const stockSymbol = stockData.ticker;
-const stockPrice = stockData.lastTrade.p;
+const stocks = data.tickers
+const stockSymbol = stocks[0].ticker;
+const stockPrice = stocks[0].lastTrade.p;
 ```
 
 ### Example Response
