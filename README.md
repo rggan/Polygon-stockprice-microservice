@@ -1,4 +1,8 @@
 # CS-361-microservice
+#### Source info:
+https://github.com/polygon-io/client-js/blob/master/examples/rest/stocks-snapshots_gainers_losers.js
+https://polygon.io/docs/stocks/get_v2_snapshot_locale_us_markets_stocks__direction
+
 ## Prerequisites
 Make sure Git, Node.js, Axios, and Express.js are installed.
 
