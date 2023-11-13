@@ -8,6 +8,8 @@ git clone <your-repo-url>
 cd <repository-name>
 ```
 ## Start Microservice
+Create a .env file and set POLYGON_API_KEY to your personal Polygon API key
+
 Make sure you are in your repository location. Then open the terminal and run:
 ```
 node microservice.js
