@@ -3,6 +3,9 @@
 A simple microservice that runs a server that makes a Get request to the Polygon API 
 and returns the price of a specific stock symbol at a specific date to a simple example React app.
 
+symbol = "AAPL" date = "2023-01-09"
+-These are the example parameters that are hard written into the React app, listened to by the microservice, and sent to the API.
+
 #### Source info:
 https://polygon.io/docs/stocks/get_v1_open-close__stocksticker___date
 
