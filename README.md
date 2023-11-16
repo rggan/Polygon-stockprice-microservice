@@ -1,10 +1,9 @@
 # CS-361-microservice
 #### Source info:
-https://github.com/polygon-io/client-js/blob/master/examples/rest/stocks-snapshots_gainers_losers.js
-https://polygon.io/docs/stocks/get_v2_snapshot_locale_us_markets_stocks__direction
 
+https://polygon.io/docs/stocks/get_v1_open-close__stocksticker___date
 ## Prerequisites
-Make sure Git, Node.js, Axios, and Express.js are installed.
+Install Git, React, Node.js, Axios, Express.js, and Cors.
 
 ## Cloning Repository
 ```
@@ -12,7 +11,8 @@ git clone <your-repo-url>
 cd <repository-name>
 ```
 ## Start Microservice
-Create a .env file and set POLYGON_API_KEY to your personal Polygon API key
+Create a .env file and ensure its in the same directory as microservice.js,
+Set POLYGON_API_KEY to your personal Polygon API key in the .env file.
 
 Make sure you are in your repository location. Then open the terminal and run:
 ```
@@ -22,92 +22,80 @@ node microservice.js
 ## Request Data
 ### Example on how to request data for gainers for this microservice using Javascript and React
 ```
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from 'react';
 
-const StockList = () => {
-  const [stocks, setStocks] = useState([]);
-  const [error, setError] = useState(null);
+const StockPrice = ({ symbol, date }) => {
+  const [openPrice, setOpenPrice] = useState(null);
+  const [closePrice, setClosePrice] = useState(null);
+  const [lowPrice, setLowPrice] = useState(null);
+  const [highPrice, setHighPrice] = useState(null);
 
   useEffect(() => {
-    const fetchStocks = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/v2/snapshot/locale/us/markets/stocks/gainers');
-        setStocks(response.data);
+        const response = await fetch(`http://localhost:3001/stock/${symbol}/${date}`);
+        const data = await response.json();
+
+        setOpenPrice(data.open);
+        setClosePrice(data.close);
+        setLowPrice(data.low);
+        setHighPrice(data.high);
       } catch (error) {
-        setError(error.message);
+        console.error('Error fetching data:', error);
       }
     };
 
-    fetchStocks();
-  }, []);
+    fetchData();
+  }, [symbol, date]);
 
+  return (
+    <div>
+      <h2>{symbol} {date}</h2>
+      <p>{openPrice !== null ? `Open: $${openPrice}` : 'Loading...'}</p>
+      <p>{closePrice !== null ? `Close: $${closePrice}` : 'Loading...'}</p>
+      <p>{lowPrice !== null ? `Low: $${lowPrice}` : 'Loading...'}</p>
+      <p>{highPrice !== null ? `High: $${highPrice}` : 'Loading...'}</p>
+    </div>
+  );
+};
+
+export default StockPrice;
 ```
 
 ## Receive Data
 ### Example of how we can handle our data
 ```
-const stocks = data.tickers
-const stockSymbol = stocks[0].ticker;
-const stockPrice = stocks[0].lastTrade.p;
+const data = await response.json();
+
+        setOpenPrice(data.open);
+        setClosePrice(data.close);
+        setLowPrice(data.low);
+        setHighPrice(data.high);
 ```
 
-### Example Response
+### Example Data Response from the Microservice
 ```
-const data = {
+response = {
+  "open": 130.465,
+  "close": 130.15,
+  "low": 129.89,
+  "high": 133.41
+}
+```
+
+### Example Data Response from the Polygon API
+```
+data = {
   "status": "OK",
-  "tickers": [
-    {
-      "day": {
-        "c": 14.2284,
-        "h": 15.09,
-        "l": 14.2,
-        "o": 14.33,
-        "v": 133963,
-        "vw": 14.5311
-      },
-      "lastQuote": {
-        "P": 14.44,
-        "S": 11,
-        "p": 14.2,
-        "s": 25,
-        "t": 1605195929997325600
-      },
-      "lastTrade": {
-        "c": [
-          63
-        ],
-        "i": "79372124707124",
-        "p": 14.2284,
-        "s": 536,
-        "t": 1605195848258266000,
-        "x": 4
-      },
-      "min": {
-        "av": 133963,
-        "c": 14.2284,
-        "h": 14.325,
-        "l": 14.2,
-        "n": 5,
-        "o": 14.28,
-        "t": 1684428600000,
-        "v": 6108,
-        "vw": 14.2426
-      },
-      "prevDay": {
-        "c": 0.73,
-        "h": 0.799,
-        "l": 0.73,
-        "o": 0.75,
-        "v": 1568097,
-        "vw": 0.7721
-      },
-      "ticker": "PDS",
-      "todaysChange": 13.498,
-      "todaysChangePerc": 1849.096,
-      "updated": 1605195848258266000
-    }
-  ]
+  "from": "2023-01-09",
+  "symbol": "AAPL",
+  "open": 130.465,
+  "high": 133.41,
+  "low": 129.89,
+  "close": 130.15,
+  "volume": 70790813.0,
+  "afterHours": 129.85,
+  "preMarket": 129.6
 }
 ```
 
