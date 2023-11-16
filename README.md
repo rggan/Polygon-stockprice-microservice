@@ -1,7 +1,11 @@
 # CS-361-microservice
-#### Source info:
+## Description
+A simple microservice that runs a server that makes a Get request to the Polygon API 
+and returns the price of a specific stock symbol at a specific date to a simple example React app.
 
+#### Source info:
 https://polygon.io/docs/stocks/get_v1_open-close__stocksticker___date
+
 ## Prerequisites
 Install Git, React, Node.js, Axios, Express.js, and Cors.
 
