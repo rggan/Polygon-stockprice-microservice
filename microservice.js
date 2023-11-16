@@ -1,28 +1,38 @@
 const express = require('express');
 const axios = require('axios');
+require('dotenv').config();
+
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 const polygonKey = process.env.POLYGON_API_KEY;
 
-app.get('/v2/snapshot/locale/us/markets/stocks/:direction', async (req, res) => {
-    const { direction } = req.params;
+const cors=require("cors");
+const corsOptions ={
+   origin:'*', 
+   credentials:true,            //access-control-allow-credentials:true
+   optionSuccessStatus:200,
+}
 
-    if (!['gainers', 'losers'].includes(direction)) {
-        return res.status(400).json({ error: 'Invalid direction' });
-    }
+app.use(cors(corsOptions))
 
-    const apiKey = polygonKey;
-    const baseUrl = `https://api.polygon.io/v2/snapshot/locale/us/markets/stocks/${direction}`;
+app.get('/stock/:symbol/:date', async (req, res) => {
+  const { symbol, date } = req.params;
 
-    try {
-        const response = await axios.get(baseUrl, { params: { apiKey } });
-        res.json(response.data);
-    } catch (error) {
-        res.status(error.response.status || 500).json({ error: `Failed to fetch data: ${error.message}` });
-    }
+  const apiUrl = `https://api.polygon.io/v1/open-close/${symbol}/${date}?adjusted=true`;
+
+  try {
+    const response = await axios.get(apiUrl, {headers: {Authorization: `Bearer ${polygonKey}`}});
+    res.json({open: response.data.open, 
+              close: response.data.close, 
+              low: response.data.low, 
+              high: response.data.high});
+
+  } catch (error) {
+    res.status(error.response.status || 500).json({ error: `Failed to fetch data: ${error.message}` });
+  }
 });
 
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
