@@ -106,5 +106,8 @@ data = {
   "preMarket": 129.6
 }
 ```
+### UML Sequence Diagram
+![image](https://github.com/rggan/CS-361-microservice/assets/77026454/59bae95f-fa32-45ca-bdd4-3b7598e70663)
+
 
 
